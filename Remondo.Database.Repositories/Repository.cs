@@ -1,6 +1,5 @@
 using System;
-using System.Data.Entity.Infrastructure;
-using System.Data.Objects;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Remondo.Model;
@@ -9,48 +8,40 @@ namespace Remondo.Database.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class, IEntity
     {
-        protected ObjectSet<T> DataTable;
+        protected DbSet<T> DbSet;
 
-        public Repository(ObjectContext dataContext)
+        public Repository(DbContext dataContext)
         {
-            DataTable = dataContext.CreateObjectSet<T>();
+            DbSet = dataContext.Set<T>();
         }
 
         #region IRepository<T> Members
 
         public void Insert(T entity)
         {
-            DataTable.AddObject(entity);
+            DbSet.Add(entity);
         }
 
         public void Delete(T entity)
         {
-            DataTable.DeleteObject(entity);
+            DbSet.Remove(entity);
         }
 
         public IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate)
         {
-            return DataTable.Where(predicate);
+            return DbSet.Where(predicate);
         }
 
         public IQueryable<T> GetAll()
         {
-            return DataTable;
+            return DbSet;
         }
 
-public T GetById(int id)
-{
-
-    //return DataTable.Single(e => e.Id.Equals(id));
-
-    var keyPropertyName = DataTable.EntitySet.ElementType
-        .KeyMembers[0].ToString();
-
-    return DataTable.Where("it." + keyPropertyName + "=" + id)
-        .FirstOrDefault();
-}
+        public T GetById(int id)
+        {
+            return DbSet.Find(id);
+        }
 
         #endregion
     }
 }
-

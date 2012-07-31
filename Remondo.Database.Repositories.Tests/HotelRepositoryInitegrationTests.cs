@@ -17,7 +17,7 @@ namespace Remondo.Database.Repositories.Tests
         {
             using (var dataContext = new HotelContext())
             {
-                var hotelRepository = new Repository<Hotel>(((IObjectContextAdapter) dataContext).ObjectContext);
+                var hotelRepository = new Repository<Hotel>(dataContext);
 
                 IEnumerable<Hotel> hotels = hotelRepository
                     .GetAll()
@@ -32,26 +32,11 @@ namespace Remondo.Database.Repositories.Tests
         }
 
         [TestMethod]
-        public void QueryById()
-        {
-            using (var dataContext = new HotelContext())
-            {
-                var hotelRepository = new Repository<Hotel>(((IObjectContextAdapter)dataContext).ObjectContext);
-
-                Hotel hotel = hotelRepository
-                    .GetById(44);
-
-                Assert.IsNotNull(hotel);
-
-            }
-        }
-
-        [TestMethod]
         public void SearchForHotelsInAmsterdam()
         {
             using (var dataContext = new HotelContext())
             {
-                var hotelRepository = new Repository<Hotel>(((IObjectContextAdapter) dataContext).ObjectContext);
+                var hotelRepository = new Repository<Hotel>(dataContext);
 
                 IEnumerable<Hotel> hotels = hotelRepository
                     .SearchFor(h => h.City.Name == Amsterdam);
