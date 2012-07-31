@@ -32,6 +32,21 @@ namespace Remondo.Database.Repositories.Tests
         }
 
         [TestMethod]
+        public void QueryById()
+        {
+            using (var dataContext = new HotelContext())
+            {
+                var hotelRepository = new Repository<Hotel>(((IObjectContextAdapter)dataContext).ObjectContext);
+
+                Hotel hotel = hotelRepository
+                    .GetById(44);
+
+                Assert.IsNotNull(hotel);
+
+            }
+        }
+
+        [TestMethod]
         public void SearchForHotelsInAmsterdam()
         {
             using (var dataContext = new HotelContext())

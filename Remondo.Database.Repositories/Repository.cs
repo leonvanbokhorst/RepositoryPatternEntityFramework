@@ -1,4 +1,5 @@
 using System;
+using System.Data.Entity.Infrastructure;
 using System.Data.Objects;
 using System.Linq;
 using System.Linq.Expressions;
@@ -37,11 +38,19 @@ namespace Remondo.Database.Repositories
             return DataTable;
         }
 
-        public T GetById(int id)
-        {
-            return DataTable.Single(e => e.Id.Equals(id));
-        }
+public T GetById(int id)
+{
+
+    //return DataTable.Single(e => e.Id.Equals(id));
+
+    var keyPropertyName = DataTable.EntitySet.ElementType
+        .KeyMembers[0].ToString();
+
+    return DataTable.Where("it." + keyPropertyName + "=" + id)
+        .FirstOrDefault();
+}
 
         #endregion
     }
 }
+
